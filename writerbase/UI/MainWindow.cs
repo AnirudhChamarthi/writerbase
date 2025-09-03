@@ -102,7 +102,7 @@ public class MainWindow : Window
             X = Pos.Right(newProjectButton) + 1,
             Y = 0
         };
-        openProjectButton.Clicked += OnChapterManager;
+        openProjectButton.Clicked += OnOpenProject;
         
         // Settings button removed - no functionality implemented
         
@@ -113,7 +113,7 @@ public class MainWindow : Window
         };
         helpButton.Clicked += OnHelp;
         
-        var exitButton = new Button("F4 - Quit")
+        var exitButton = new Button("Esc - Quit")
         {
             X = Pos.Right(helpButton) + 1,
             Y = 0
@@ -263,6 +263,8 @@ public class MainWindow : Window
         Application.Run(dialog);
     }
     
+
+    
     private void OnOpenProject()
     {
         if (_projectManager.CurrentProject == null)
@@ -271,37 +273,8 @@ public class MainWindow : Window
             return;
         }
         
-        var project = _projectManager.CurrentProject;
-        if (project.Chapters.Count == 0)
-        {
-            var result = MessageBox.Query("No Chapters", 
-                "This project has no chapters. Would you like to create one?", 
-                "Yes", "No");
-                
-            if (result == 0)
-            {
-                OnChapterManager();
-            }
-        }
-        else
-        {
-            // Open the first chapter for editing
-            var firstChapter = project.Chapters.OrderBy(c => c.Order).First();
-            var editor = new ChapterEditorWindow(_projectManager, firstChapter);
-            Application.Run(editor);
-        }
-    }
-    
-    private void OnChapterManager()
-    {
-        if (_projectManager.CurrentProject == null)
-        {
-            MessageBox.ErrorQuery("Error", "No project selected", "OK");
-            return;
-        }
-        
-        var chapterManager = new ChapterManagerWindow(_projectManager);
-        Application.Run(chapterManager);
+        var openProjectWindow = new OpenProjectWindow(_projectManager);
+        Application.Run(openProjectWindow);
         RefreshProjectList();
     }
     
@@ -318,36 +291,7 @@ public class MainWindow : Window
     
     private void OnHelp()
     {
-                 var helpText = @"
- MOUSE-ONLY INTERFACE:
- ====================
- 
-   Main Window:
-  - Click New Project button to create a project
-  - Click Open Project button to open a project
-  - Click Chapter Manager button to manage chapters
-  - Click Help button for this help screen
-  - Click Quit button to exit
- 
- Chapter Manager:
- - Click Add Chapter button to create chapters
- - Click Edit Chapter button to edit selected chapter
- - Click Delete Chapter button to remove chapters
- - Click Close button to return to main window
- 
- Chapter Editor:
- - Click Save button to save changes
- - Click Close button to exit (with save prompt)
- - Click Help button for editor help
- 
- Navigation:
- - Use mouse to click buttons and select items
- - Tab: Move between text fields
- - Enter: Activate focused control
- - Arrow keys: Navigate lists
- 
- All actions are performed by clicking buttons!
-         ";
+        var helpText = "Help information will be displayed here.";
         
         var helpDialog = new Dialog("Mouse-Only Interface Help")
         {
@@ -443,7 +387,7 @@ public class MainWindow : Window
         else if (keyEvent.Key == Key.F2)
         {
             _projectInfoLabel.Text = "Shortcut: F2 - Open Project";
-            OnChapterManager();
+            OnOpenProject();
             return true; // Consume the key event
         }
         else if (keyEvent.Key == Key.F3)
@@ -452,16 +396,16 @@ public class MainWindow : Window
             OnHelp();
             return true; // Consume the key event
         }
-        else if (keyEvent.Key == Key.F4)
+        else if (keyEvent.Key == Key.Esc)
         {
-            _projectInfoLabel.Text = "Shortcut: F4 - Quit";
+            _projectInfoLabel.Text = "Shortcut: Esc - Quit";
             OnExit();
             return true; // Consume the key event
         }
         else if (keyEvent.Key == Key.Enter)
         {
             _projectInfoLabel.Text = "Enter key - Opening selected project";
-            OnChapterManager();
+            OnOpenProject();
             return true; // Consume the key event
         }
         

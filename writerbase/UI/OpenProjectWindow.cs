@@ -4,19 +4,19 @@ using writerbase.Services;
 
 namespace writerbase.UI;
 
-public class ChapterManagerWindow : Window
+public class OpenProjectWindow : Window
 {
     private readonly ProjectManager _projectManager;
     private ListView _chapterListView = null!;
     private Label _statusLabel = null!;
     private Project? _currentProject;
     
-    public ChapterManagerWindow(ProjectManager projectManager)
+    public OpenProjectWindow(ProjectManager projectManager)
     {
         _projectManager = projectManager;
         _currentProject = projectManager.CurrentProject;
         
-        Title = "Chapter Manager";
+        Title = "Open Project";
         X = 0;
         Y = 0;
         Width = Dim.Fill();
@@ -67,28 +67,28 @@ public class ChapterManagerWindow : Window
             Height = 3
         };
         
-        var addButton = new Button("Add Chapter")
+        var addButton = new Button("F1 - Add Chapter")
         {
             X = 0,
             Y = 0
         };
         addButton.Clicked += OnAddChapter;
         
-        var editButton = new Button("Edit Chapter")
+        var editButton = new Button("F2 - Edit Chapter")
         {
             X = Pos.Right(addButton) + 1,
             Y = 0
         };
         editButton.Clicked += OnEditChapter;
         
-        var deleteButton = new Button("Delete Chapter")
+        var deleteButton = new Button("F3 - Delete Chapter")
         {
             X = Pos.Right(editButton) + 1,
             Y = 0
         };
         deleteButton.Clicked += OnDeleteChapter;
         
-        var closeButton = new Button("Close")
+        var closeButton = new Button("Esc - Close")
         {
             X = Pos.Right(deleteButton) + 1,
             Y = 0
@@ -108,7 +108,7 @@ public class ChapterManagerWindow : Window
         };
         Add(_statusLabel);
         
-        // No keyboard shortcuts - mouse-only interface
+
     }
     
     private void RefreshChapterList()
@@ -251,4 +251,38 @@ public class ChapterManagerWindow : Window
     }
     
     // AddEscKeyFunctionality method removed - mouse-only interface
+    
+    public override bool ProcessKey(KeyEvent keyEvent)
+    {
+        // Handle F1 for Add Chapter
+        if (keyEvent.Key == Key.F1)
+        {
+            OnAddChapter();
+            return true; // Consume the key event
+        }
+        
+        // Handle F2 for Edit Chapter
+        if (keyEvent.Key == Key.F2)
+        {
+            OnEditChapter();
+            return true; // Consume the key event
+        }
+        
+        // Handle F3 for Delete Chapter
+        if (keyEvent.Key == Key.F3)
+        {
+            OnDeleteChapter();
+            return true; // Consume the key event
+        }
+        
+        // Handle Esc for Close
+        if (keyEvent.Key == Key.Esc)
+        {
+            OnClose();
+            return true; // Consume the key event
+        }
+        
+        // Let other keys be processed normally
+        return base.ProcessKey(keyEvent);
+    }
 }

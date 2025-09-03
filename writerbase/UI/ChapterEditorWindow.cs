@@ -116,14 +116,14 @@ public class ChapterEditorWindow : Window
             Height = 4
         };
         
-        var saveButton = new Button("Save")
+        var saveButton = new Button("F1 - Save")
         {
             X = 2,
             Y = 1
         };
         saveButton.Clicked += SaveChapter;
         
-        var closeButton = new Button("Close")
+        var closeButton = new Button("Esc - Close")
         {
             X = Pos.Right(saveButton) + 2,
             Y = 1
@@ -209,8 +209,40 @@ public class ChapterEditorWindow : Window
         }
     }
     
-    // No keyboard shortcuts - mouse-only interface
-    // All actions performed via buttons
+    public override bool ProcessKey(KeyEvent keyEvent)
+    {
+        // Handle F1 for Save
+        if (keyEvent.Key == Key.F1)
+        {
+            SaveChapter();
+            return true; // Consume the key event
+        }
+        
+        // Handle Esc for Close
+        if (keyEvent.Key == Key.Esc)
+        {
+            var result = MessageBox.Query("Save Changes", 
+                "Do you want to save your changes before closing?", 
+                "Save & Close", "Close Without Saving", "Cancel");
+                
+            switch (result)
+            {
+                case 0: // Save & Close
+                    SaveChapter();
+                    Application.RequestStop();
+                    break;
+                case 1: // Close Without Saving
+                    Application.RequestStop();
+                    break;
+                case 2: // Cancel
+                    break;
+            }
+            return true; // Consume the key event
+        }
+        
+        // Let other keys be processed normally
+        return base.ProcessKey(keyEvent);
+    }
     
     private void ShowHelp()
     {
