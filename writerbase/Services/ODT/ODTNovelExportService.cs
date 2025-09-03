@@ -19,6 +19,12 @@ public class ODTNovelExportService
     {
         try
         {
+            // Delete existing file if it exists (to handle overwrite)
+            if (File.Exists(filePath))
+            {
+                File.Delete(filePath);
+            }
+            
             // Create ODT file structure
             var odtContent = CreateODTContent(project);
             var odtStyles = CreateODTStyles();
