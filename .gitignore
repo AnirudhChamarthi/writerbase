@@ -563,3 +563,8 @@ Thumbs.db
 # Exclude user data but include sample data
 !sample-data/
 !examples/
+
+# Test files
+*.odt
+*.docx
+*.rtf
