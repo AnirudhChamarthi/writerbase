@@ -38,6 +38,7 @@ public class ChapterEditorWindow : Window
         LoadChapterContent();
     }
     
+    // Initialize the chapter editor user interface
     private void InitializeUI()
     {
         // Title bar
@@ -168,6 +169,7 @@ public class ChapterEditorWindow : Window
         Add(_statusLabel);
     }
     
+    // Load chapter content into the editor fields
     private void LoadChapterContent()
     {
         _titleField.Text = _chapter.Title;
@@ -175,12 +177,14 @@ public class ChapterEditorWindow : Window
         UpdateStatistics();
     }
     
+    // Handle content changes and update statistics
     private void OnContentChanged()
     {
         UpdateStatistics();
         _statusLabel.Text = "Modified - Click Save button to save";
     }
     
+    // Update word and character count statistics
     private void UpdateStatistics()
     {
         var content = _contentEditor.Text.ToString();
@@ -193,6 +197,7 @@ public class ChapterEditorWindow : Window
     
     // AddKeyboardShortcuts method removed - using ProcessKey override instead
     
+    // Save chapter changes to the project manager
     private void SaveChapter()
     {
         try
@@ -209,6 +214,7 @@ public class ChapterEditorWindow : Window
         }
     }
     
+    // Handle keyboard shortcuts for editor operations
     public override bool ProcessKey(KeyEvent keyEvent)
     {
         // Handle F1 for Save
@@ -244,6 +250,7 @@ public class ChapterEditorWindow : Window
         return base.ProcessKey(keyEvent);
     }
     
+    // Display help information for the editor
     private void ShowHelp()
     {
         var helpText = @"

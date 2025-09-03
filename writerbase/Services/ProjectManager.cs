@@ -36,6 +36,7 @@ public class ProjectManager
     /// Initializes the ProjectManager and sets up the projects directory.
     /// Creates the directory if it doesn't exist.
     /// </summary>
+    // Initialize the ProjectManager and set up the projects directory
     public ProjectManager()
     {
         // Get the user's profile directory (e.g., C:\Users\Username on Windows)
@@ -58,6 +59,7 @@ public class ProjectManager
     /// Reads the projects directory and returns filenames without the .json extension.
     /// </summary>
     /// <returns>List of project names that can be loaded</returns>
+    // Get a list of all available project names
     public List<string> GetProjectList()
     {
         // Find all .json files in the projects directory
@@ -74,6 +76,7 @@ public class ProjectManager
     /// <param name="title">Project title (required)</param>
     /// <param name="description">Optional project description</param>
     /// <returns>The newly created project</returns>
+    // Create a new project with the specified title and description
     public Project CreateProject(string title, string description = "")
     {
         // Validate input
@@ -113,6 +116,7 @@ public class ProjectManager
     /// </summary>
     /// <param name="projectName">Name of the project to load</param>
     /// <returns>The loaded project, or null if not found</returns>
+    // Load a project from disk by name
     public Project? LoadProject(string projectName)
     {
         // Validate input to prevent path traversal attacks
@@ -166,6 +170,7 @@ public class ProjectManager
     /// If no project is specified, saves the current project.
     /// </summary>
     /// <param name="project">Project to save, or null to save current project</param>
+    // Save a project to disk as a JSON file
     public void SaveProject(Project? project = null)
     {
         // Use the specified project or fall back to current project
@@ -248,6 +253,7 @@ public class ProjectManager
     /// </summary>
     /// <param name="fileName">The filename to sanitize</param>
     /// <returns>A safe filename, or empty string if invalid</returns>
+    // Sanitize filename to prevent path traversal and invalid characters
     private static string SanitizeFileName(string fileName)
     {
         if (string.IsNullOrWhiteSpace(fileName))
@@ -288,6 +294,7 @@ public class ProjectManager
     /// <param name="chapterId">ID of the chapter to update</param>
     /// <param name="title">New chapter title</param>
     /// <param name="content">New chapter content</param>
+    // Update an existing chapter's title and content
     public void UpdateChapter(string chapterId, string title, string content)
     {
         // Validate that we have a current project
@@ -313,6 +320,7 @@ public class ProjectManager
     /// The deletion is automatically saved.
     /// </summary>
     /// <param name="chapterId">ID of the chapter to delete</param>
+    // Delete a chapter from the current project
     public void DeleteChapter(string chapterId)
     {
         // Validate that we have a current project
@@ -336,6 +344,7 @@ public class ProjectManager
     /// The new order is automatically saved.
     /// </summary>
     /// <param name="chapterIds">List of chapter IDs in the desired order</param>
+    // Reorder chapters in the current project
     public void ReorderChapters(List<string> chapterIds)
     {
         // Validate that we have a current project

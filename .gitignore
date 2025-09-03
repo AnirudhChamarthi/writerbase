@@ -444,7 +444,7 @@ Temporary Items
 
 # Application-specific files
 # User data directory (contains user projects)
-WritingApp/Projects/
+writerbase/Projects/
 *.json
 
 # Logs

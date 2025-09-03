@@ -1,4 +1,4 @@
-# Terminal Writing Application - System Architecture Diagram
+# writerbase - System Architecture Diagram
 
 ## High-Level System Overview
 
@@ -15,7 +15,7 @@
 │           │                       │                       │                │
 │           ▼                       ▼                       ▼                │
 │  ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐        │
-│  │  TERMINAL.GUI   │    │ CHAPTERMANAGER  │    │   JSON FILES    │        │
+│  │  TERMINAL.GUI   │    │ OPENPROJECT     │    │   JSON FILES    │        │
 │  │  (UI Framework) │    │   WINDOW        │    │   (Storage)     │        │
 │  └─────────────────┘    └─────────────────┘    └─────────────────┘        │
 │           │                       │                       │                │
@@ -68,7 +68,7 @@
 │                                    │                                        │
 │                                    ▼                                        │
 │  ┌─────────────────────────────────────────────────────────────────────────┐ │
-│  │                        CHAPTER MANAGER                                 │ │
+│  │                        OPEN PROJECT                                    │ │
 │  │  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐      │ │
 │  │  │   CHAPTER   │ │   ADD       │ │   EDIT      │ │   DELETE    │      │ │
 │  │  │    LIST     │ │  BUTTON     │ │  BUTTON     │ │  BUTTON     │      │ │
@@ -138,7 +138,7 @@
 │  │  │   JSON FILES    │    │   NEWTONSOFT    │    │   FILE SYSTEM   │    │ │
 │  │  │                 │    │     JSON        │    │                 │    │ │
 │  │  │ • Project.json  │    │ • Serialization │    │ • User Profile  │    │ │
-│  │  │ • Chapter.json  │    │ • Deserialization│   │ • WritingApp    │    │ │
+│  │  │ • Chapter.json  │    │ • Deserialization│   │ • writerbase    │    │ │
 │  │  │ • Settings.json │    │ • Error Handling│   │ • Projects/      │    │ │
 │  │  └─────────────────┘    └─────────────────┘    └─────────────────┘    │ │
 │  └─────────────────────────────────────────────────────────────────────────┘ │
@@ -155,15 +155,15 @@
 │  │   USER INPUT    │───▶│  KEYBOARD       │───▶│   ACTION        │        │
 │  │                 │    │  SHORTCUTS      │    │   EXECUTION     │        │
  │  │ • Mouse Click   │    │                 │    │                 │        │
- │  │ • Key Press     │    │ • N/n = New     │    │ • Create Project│        │
- │  │ • Navigation    │    │ • O/o = Open    │    │ • Load Project  │        │
- │  └─────────────────┘    │ • C/c = Chapter │    │ • Edit Chapter  │        │
- │                         │ • A/a = Add     │    │ • Delete Chapter│        │
- │                         │ • E/e = Edit    │    │ • Save Changes  │        │
- │                         │ • D/d = Delete  │    │ • Exit App      │        │
- │                         │ • S/s = Settings│    └─────────────────┘        │
- │                         │ • H/h = Help    │                               │
- │                         │ • Q/q = Quit    │                               │
+ │  │ • Key Press     │    │ • F1 = New      │    │ • Create Project│        │
+ │  │ • Navigation    │    │ • F2 = Open     │    │ • Load Project  │        │
+ │  └─────────────────┘    │ • F3 = Help     │    │ • Edit Chapter  │        │
+ │                         │ • Esc = Quit    │    │ • Delete Chapter│        │
+ │                         │ • ↑/↓ = Navigate│    │ • Save Changes  │        │
+ │                         │ • Enter = Open  │    │ • Exit App      │        │
+ │                         │ • F1 = Add      │    └─────────────────┘        │
+ │                         │ • F2 = Edit     │                               │
+ │                         │ • F3 = Delete   │                               │
 │                         └─────────────────┘                               │
 │                                    │                                       │
 │                                    ▼                                       │
@@ -234,9 +234,9 @@
 ## File Structure
 ```
 WritingApp/
-├── WritingApp.sln                 # Solution file
-├── WritingApp/
-│   ├── WritingApp.csproj          # Project file
+├── writerbase.sln                 # Solution file
+├── writerbase/
+│   ├── writerbase.csproj          # Project file
 │   ├── Program.cs                 # Entry point
 │   ├── SimpleTest.cs              # Test utility
 │   ├── Models/
@@ -248,7 +248,7 @@ WritingApp/
 │   │   └── ProjectManager.cs      # Business logic service
 │   └── UI/
 │       ├── MainWindow.cs          # Main application window
-│       ├── ChapterManagerWindow.cs # Chapter management UI
+│       ├── OpenProjectWindow.cs   # Chapter management UI
 │       └── ChapterEditorWindow.cs # Text editor UI
 ├── README.md                      # User documentation
 ├── CODE_EXPLANATION.md            # Technical documentation

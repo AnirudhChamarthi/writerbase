@@ -1,4 +1,4 @@
-# Terminal Writing Application
+# writerbase - Terminal Writing Application
 
 A distraction-free terminal-based writing application designed for novel and short story creation. Built with C# and .NET, featuring a modular architecture with strong OOP principles.
 
@@ -89,7 +89,7 @@ dotnet build
 
 ### 4. Run the Application
 ```bash
-dotnet run --project WritingApp
+dotnet run --project writerbase
 ```
 
 ## Usage Guide
@@ -97,7 +97,7 @@ dotnet run --project WritingApp
 ### Starting the Application
 1. Open your terminal/command prompt
 2. Navigate to the project directory
-3. Run: `dotnet run --project WritingApp`
+3. Run: `dotnet run --project writerbase`
 
 ### Creating a New Project
 1. Click "New Project" or press the corresponding button
@@ -107,31 +107,47 @@ dotnet run --project WritingApp
 
 ### Managing Chapters
 1. Select a project from the list
-2. Click "Chapter Manager"
+2. Click "F2 - Open Project" or press F2
 3. Use the interface to:
-   - **Add Chapter**: Create new chapters
-   - **Edit Chapter**: Open the full-screen editor
-   - **Delete Chapter**: Remove chapters (with confirmation)
-   - **Reorder Chapters**: Change chapter order
+   - **Add Chapter**: Create new chapters (F1)
+   - **Edit Chapter**: Open the full-screen editor (F2)
+   - **Delete Chapter**: Remove chapters (F3)
+   - **Close**: Return to main window (Esc)
 
 ### Writing in the Editor
-1. Select a project and click "Open Project" or use Chapter Manager
-2. The full-screen editor will open with:
+1. Select a project and click "F2 - Open Project" or press F2
+2. Select a chapter and click "F2 - Edit Chapter" or press F2
+3. The full-screen editor will open with:
    - **Title field** at the top
    - **Content area** for writing
    - **Statistics bar** showing word/character counts
    - **Status bar** with save information
 
 ### Keyboard Shortcuts
-- **Ctrl+S**: Save chapter
-- **Esc**: Close editor (with save prompt)
-- **F1**: Show help
+
+#### Main Window
+- **F1**: New Project
+- **F2**: Open Project (Chapter Manager)
+- **F3**: Help
+- **Esc**: Quit
+- **Enter**: Open selected project
+- **↑/↓**: Navigate through projects
+
+#### Chapter Manager (Open Project)
+- **F1**: Add Chapter
+- **F2**: Edit Chapter
+- **F3**: Delete Chapter
+- **Esc**: Close
+
+#### Chapter Editor
+- **F1**: Save
+- **Esc**: Close (with save prompt)
 - **Tab**: Indent text
 - **Enter**: New paragraph
 
 ### Project Management
 - **Projects are automatically saved** to your user directory
-- **Location**: `~/WritingApp/Projects/` (or `%USERPROFILE%\WritingApp\Projects\` on Windows)
+- **Location**: `~/writerbase/Projects/` (or `%USERPROFILE%\writerbase\Projects\` on Windows)
 - **Format**: JSON files for easy backup and sharing
 - **Auto-save**: Enabled by default (every 5 minutes)
 
@@ -139,22 +155,24 @@ dotnet run --project WritingApp
 
 ```
 Terminal-App/
-├── WritingApp.sln              # Solution file
-├── WritingApp/
-│   ├── WritingApp.csproj       # Project file
+├── writerbase.sln              # Solution file
+├── writerbase/
+│   ├── writerbase.csproj       # Project file
 │   ├── Program.cs              # Application entry point
 │   ├── Models/                 # Data models
 │   │   ├── Project.cs
-│   │   ├── Chapter.cs
-│   │   ├── ProjectSettings.cs
-│   │   └── ChapterNotes.cs
+│   │   └── Chapter.cs
 │   ├── Services/               # Business logic
 │   │   └── ProjectManager.cs
 │   └── UI/                     # User interface
 │       ├── MainWindow.cs
-│       ├── ChapterManagerWindow.cs
+│       ├── OpenProjectWindow.cs
 │       └── ChapterEditorWindow.cs
-└── README.md                   # This file
+├── README.md                   # User documentation
+├── SECURITY.md                 # Security documentation
+├── system_architecture_diagram.md # System architecture
+├── LICENSE                     # MIT License
+└── .gitignore                  # Git ignore rules
 ```
 
 ## Architecture
@@ -167,8 +185,8 @@ Terminal-App/
 
 ### Key Components
 - **ProjectManager**: Handles project lifecycle and persistence
-- **MainWindow**: Primary application interface
-- **ChapterManagerWindow**: Chapter organization interface
+- **MainWindow**: Primary application interface with project navigation
+- **OpenProjectWindow**: Chapter organization and management interface
 - **ChapterEditorWindow**: Full-screen writing editor
 
 ## Development
@@ -188,8 +206,7 @@ dotnet build
 # Build in Release mode
 dotnet build --configuration Release
 
-# Run tests (when available)
-dotnet test
+
 ```
 
 ### Adding New Features

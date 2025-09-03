@@ -35,6 +35,7 @@ public class OpenProjectWindow : Window
         RefreshChapterList();
     }
     
+    // Initialize the chapter management user interface
     private void InitializeUI()
     {
         // Chapter list
@@ -111,6 +112,7 @@ public class OpenProjectWindow : Window
 
     }
     
+    // Refresh the chapter list display from the current project
     private void RefreshChapterList()
     {
         _currentProject = _projectManager.CurrentProject;
@@ -131,11 +133,13 @@ public class OpenProjectWindow : Window
         _statusLabel.Text = $"Project: {_currentProject.Title} | Total Words: {_currentProject.TotalWordCount}";
     }
     
+    // Handle chapter selection change in the list view
     private void OnChapterSelected(ListViewItemEventArgs args)
     {
         // Handle chapter selection
     }
     
+    // Handle adding a new chapter to the current project
     private void OnAddChapter()
     {
         if (_currentProject == null)
@@ -190,6 +194,7 @@ public class OpenProjectWindow : Window
         Application.Run(dialog);
     }
     
+    // Handle editing the selected chapter in the editor window
     private void OnEditChapter()
     {
         if (_currentProject == null || _chapterListView.SelectedItem < 0)
@@ -215,6 +220,7 @@ public class OpenProjectWindow : Window
         RefreshChapterList();
     }
     
+    // Handle deleting the selected chapter with confirmation
     private void OnDeleteChapter()
     {
         if (_currentProject == null || _chapterListView.SelectedItem < 0)
@@ -245,6 +251,7 @@ public class OpenProjectWindow : Window
         }
     }
     
+    // Handle closing the open project window
     private void OnClose()
     {
         Application.RequestStop();
@@ -252,6 +259,7 @@ public class OpenProjectWindow : Window
     
     // AddEscKeyFunctionality method removed - mouse-only interface
     
+    // Handle keyboard shortcuts for chapter management operations
     public override bool ProcessKey(KeyEvent keyEvent)
     {
         // Handle F1 for Add Chapter

@@ -7,6 +7,7 @@ namespace writerbase.UI;
 public class MainWindow : Window
 {
     private readonly ProjectManager _projectManager;
+    private readonly ExportService _exportService;
     private Label _statusLabel = null!;
     private Label _projectInfoLabel = null!;
     private ListView _projectListView = null!;
@@ -14,6 +15,7 @@ public class MainWindow : Window
     public MainWindow(ProjectManager projectManager)
     {
         _projectManager = projectManager;
+        _exportService = new ExportService();
         
         Title = "writerbase - Terminal Writing Application";
         X = 0;
@@ -37,6 +39,7 @@ public class MainWindow : Window
         SetFocus();
     }
     
+    // Initialize the main user interface components
     private void InitializeUI()
     {
         // Header
@@ -113,14 +116,21 @@ public class MainWindow : Window
         };
         helpButton.Clicked += OnHelp;
         
-        var exitButton = new Button("Esc - Quit")
+        var exportButton = new Button("F4 - Export Project")
         {
             X = Pos.Right(helpButton) + 1,
             Y = 0
         };
+        exportButton.Clicked += OnExportProject;
+        
+        var exitButton = new Button("Esc - Quit")
+        {
+            X = Pos.Right(exportButton) + 1,
+            Y = 0
+        };
         exitButton.Clicked += OnExit;
         
-        buttonFrame.Add(newProjectButton, openProjectButton, helpButton, exitButton);
+        buttonFrame.Add(newProjectButton, openProjectButton, helpButton, exportButton, exitButton);
         Add(buttonFrame);
         
         // Status bar
@@ -140,6 +150,7 @@ public class MainWindow : Window
         ApplyColorSchemeToChildren();
     }
     
+    // Apply color scheme to all child UI elements
     private void ApplyColorSchemeToChildren()
     {
         // Apply the same color scheme to all child components
@@ -158,6 +169,7 @@ public class MainWindow : Window
         }
     }
     
+    // Refresh the project list display from the data source
     private void RefreshProjectList()
     {
         var projects = _projectManager.GetProjectList();
@@ -174,6 +186,7 @@ public class MainWindow : Window
         }
     }
     
+    // Handle project selection change in the list view
     private void OnProjectSelected(ListViewItemEventArgs args)
     {
         if (args.Item < 0) return;
@@ -192,6 +205,7 @@ public class MainWindow : Window
         }
     }
     
+    // Handle new project creation dialog and logic
     private void OnNewProject()
     {
         var dialog = new Dialog("New Project")
@@ -265,6 +279,7 @@ public class MainWindow : Window
     
 
     
+    // Handle opening the selected project in the chapter manager
     private void OnOpenProject()
     {
         if (_projectManager.CurrentProject == null)
@@ -280,6 +295,7 @@ public class MainWindow : Window
     
     // OnSettings method removed - no functionality implemented
     
+    // Handle application exit with confirmation dialog
     private void OnExit()
     {
         var result = MessageBox.Query("Exit", "Are you sure you want to exit?", "Yes", "No");
@@ -289,6 +305,7 @@ public class MainWindow : Window
         }
     }
     
+    // Display help information dialog
     private void OnHelp()
     {
         var helpText = "Help information will be displayed here.";
@@ -320,8 +337,144 @@ public class MainWindow : Window
         Application.Run(helpDialog);
     }
     
+    // Handle project export functionality
+    private void OnExportProject()
+    {
+        if (_projectManager.CurrentProject == null)
+        {
+            MessageBox.ErrorQuery("Error", "No project selected", "OK");
+            return;
+        }
+        
+        var exportDialog = new Dialog("Export Project")
+        {
+            Width = 50,
+            Height = 8
+        };
+        
+        var formatLabel = new Label("Select export format:")
+        {
+            X = 0,
+            Y = 0
+        };
+        
+        var docxButton = new Button("DOCX")
+        {
+            X = 0,
+            Y = 2
+        };
+        docxButton.Clicked += () => {
+            exportDialog.Running = false;
+            ExportToDocx();
+        };
+        
+        var cancelButton = new Button("Cancel")
+        {
+            X = Pos.Center(),
+            Y = 5
+        };
+        cancelButton.Clicked += () => exportDialog.Running = false;
+        
+        exportDialog.Add(formatLabel, docxButton, cancelButton);
+        Application.Run(exportDialog);
+    }
+    
+    private void ExportToDocx()
+    {
+        try
+        {
+            var project = _projectManager.CurrentProject;
+            if (project == null)
+            {
+                MessageBox.ErrorQuery("Error", "No project to export", "OK");
+                return;
+            }
+            
+            // Show file save dialog
+            var saveDialog = new Dialog("Save DOCX File")
+            {
+                Width = 60,
+                Height = 8
+            };
+            
+            var pathLabel = new Label("File path:")
+            {
+                X = 0,
+                Y = 0
+            };
+            
+            var pathField = new TextField($"{project.Title}.docx")
+            {
+                X = 0,
+                Y = 1,
+                Width = Dim.Fill() - 2
+            };
+            
+            var saveButton = new Button("Save")
+            {
+                X = 0,
+                Y = 3
+            };
+            saveButton.Clicked += () =>
+            {
+                var filePath = pathField.Text.ToString();
+                if (!string.IsNullOrWhiteSpace(filePath))
+                {
+                    try
+                    {
+                        // Check if file already exists
+                        if (File.Exists(filePath))
+                        {
+                            var overwriteResult = MessageBox.Query("File Exists", 
+                                $"File '{filePath}' already exists. Do you want to overwrite it?", 
+                                "Yes", "No");
+                            
+                            if (overwriteResult == 0) // User clicked "Yes"
+                            {
+                                _exportService.ExportToDocx(project, filePath);
+                                saveDialog.Running = false;
+                                MessageBox.Query("Success", $"Project exported to {filePath}", "OK");
+                                _statusLabel.Text = $"Exported to {filePath}";
+                            }
+                            // If user clicked "No", do nothing and keep dialog open
+                        }
+                        else
+                        {
+                            // File doesn't exist, proceed with export
+                            _exportService.ExportToDocx(project, filePath);
+                            saveDialog.Running = false;
+                            MessageBox.Query("Success", $"Project exported to {filePath}", "OK");
+                            _statusLabel.Text = $"Exported to {filePath}";
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.ErrorQuery("Export Error", $"Failed to export: {ex.Message}", "OK");
+                    }
+                }
+            };
+            
+            var cancelButton = new Button("Cancel")
+            {
+                X = Pos.Right(saveButton) + 1,
+                Y = 3
+            };
+            cancelButton.Clicked += () => saveDialog.Running = false;
+            
+            saveDialog.Add(pathLabel, pathField, saveButton, cancelButton);
+            Application.Run(saveDialog);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.ErrorQuery("Error", $"Export failed: {ex.Message}", "OK");
+        }
+    }
+    
+
+    
     // AddEscKeyFunctionality method removed - mouse-only interface
     
+    // Handle keyboard input and shortcuts for the main window
     public override bool ProcessKey(KeyEvent keyEvent)
     {
         // Debug: Always show when any key is pressed
@@ -394,6 +547,12 @@ public class MainWindow : Window
         {
             _projectInfoLabel.Text = "Shortcut: F3 - Help";
             OnHelp();
+            return true; // Consume the key event
+        }
+        else if (keyEvent.Key == Key.F4)
+        {
+            _projectInfoLabel.Text = "Shortcut: F4 - Export Project";
+            OnExportProject();
             return true; // Consume the key event
         }
         else if (keyEvent.Key == Key.Esc)
